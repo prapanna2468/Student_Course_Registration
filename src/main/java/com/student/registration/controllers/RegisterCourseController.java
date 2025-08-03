@@ -7,7 +7,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.CheckBox;
-import javafx.scene.control.VBox;
+import javafx.scene.layout.VBox;  // Changed from javafx.scene.control.VBox
 
 import java.net.URL;
 import java.util.ArrayList;
