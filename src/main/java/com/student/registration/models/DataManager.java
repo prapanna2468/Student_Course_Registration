@@ -34,11 +34,13 @@ public class DataManager {
         availableCourses.add(new Course("CS401", "Software Engineering", "Dr. Davis", 4, "TTh 3:30-5:00"));
         availableCourses.add(new Course("MATH201", "Discrete Mathematics", "Dr. Wilson", 3, "MWF 10:00-11:00"));
         availableCourses.add(new Course("PHYS101", "Physics I", "Dr. Taylor", 4, "TTh 9:00-10:30"));
+        availableCourses.add(new Course("ENG101", "English Composition", "Dr. Anderson", 3, "MWF 1:00-2:00"));
+        availableCourses.add(new Course("HIST201", "World History", "Dr. Martinez", 3, "TTh 2:00-3:30"));
     }
     
     private void loadCurrentStudent() {
-        // Default student for demo
-        currentStudent = new Student("STU001", "John Doe", "john.doe@university.edu", "Computer Science", "Fall 2024");
+        // Default student for demo - this will be set after login
+        currentStudent = new Student("STU001", "Prapanna Kumar", "prapanna@university.edu", "Computer Science", "Fall 2024");
     }
     
     public void saveStudentData() {
@@ -58,6 +60,12 @@ public class DataManager {
     }
     
     public boolean validateLogin(String username, String password) {
-        return "admin".equals(username) && "password".equals(password);
+        // Updated credentials: username = prapanna, password = 123
+        if ("prapanna".equals(username) && "123".equals(password)) {
+            // Set the current student after successful login
+            currentStudent = new Student("STU001", "Prapanna Kumar", "prapanna@university.edu", "Computer Science", "Fall 2024");
+            return true;
+        }
+        return false;
     }
 }
