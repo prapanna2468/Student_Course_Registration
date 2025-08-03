@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.student.registration.controllers.LoginController">
+   <center>
+      <VBox alignment="CENTER" spacing="20.0" styleClass="login-container">
+         <children>
+            <Text fill="#2c3e50" strokeType="OUTSIDE" strokeWidth="0.0" text="Student Course Registration" styleClass="title-text">
+               <font>
+                  <Font name="System Bold" size="28.0" />
+               </font>
+            </Text>
+            <Text fill="#7f8c8d" strokeType="OUTSIDE" strokeWidth="0.0" text="Please login to continue" styleClass="subtitle-text">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Text>
+            <VBox alignment="CENTER" spacing="15.0" styleClass="form-container">
+               <children>
+                  <VBox spacing="5.0">
+                     <children>
+                        <Label text="Username:" styleClass="form-label" />
+                        <TextField fx:id="usernameField" promptText="Enter username" styleClass="form-field" />
+                     </children>
+                  </VBox>
+                  <VBox spacing="5.0">
+                     <children>
+                        <Label text="Password:" styleClass="form-label" />
+                        <PasswordField fx:id="passwordField" promptText="Enter password" styleClass="form-field" />
+                     </children>
+                  </VBox>
+                  <Button mnemonicParsing="false" onAction="#handleLogin" text="Login" styleClass="primary-button" />
+               </children>
+               <padding>
+                  <Insets bottom="20.0" left="40.0" right="40.0" top="20.0" />
+               </padding>
+            </VBox>
+            <Text fill="#95a5a6" strokeType="OUTSIDE" strokeWidth="0.0" text="Use 'admin' and 'password' to login" styleClass="hint-text">
+               <font>
+                  <Font size="12.0" />
+               </font>
+            </Text>
+         </children>
+         <padding>
+            <Insets bottom="50.0" left="50.0" right="50.0" top="50.0" />
+         </padding>
+      </VBox>
+   </center>
+</BorderPane>
