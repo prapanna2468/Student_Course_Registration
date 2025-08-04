@@ -1,83 +1,117 @@
 package com.student.registration.controllers;
 
 import com.student.registration.models.DataManager;
+import com.student.registration.models.Student;
 import com.student.registration.utils.SceneManager;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.chart.PieChart;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
-import javafx.application.Platform;
+import javafx.scene.text.Text;
 
-import java.net.URL;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 
-public class DashboardController implements Initializable {
-    
-    @FXML private Label welcomeLabel;
+public class DashboardController {
+
+    @FXML private Text welcomeLabel;
+    @FXML private Text dateLabel;
     @FXML private Label totalCoursesLabel;
+    @FXML private Label availableCoursesLabel;
     @FXML private PieChart courseChart;
-    
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        String studentName = DataManager.getInstance().getCurrentStudent().getName();
-        welcomeLabel.setText("Welcome, " + studentName + "!");
-        
-        updateDashboard();
+
+    @FXML
+    public void initialize() {
+        Student currentStudent = DataManager.getInstance().getCurrentStudent();
+        if (currentStudent == null) {
+            SceneManager.getInstance().switchScene("login.fxml");
+            return;
+        }
+
+        // Set welcome message
+        String displayName = getDisplayName(currentStudent.getUsername());
+        welcomeLabel.setText("Welcome back, " + displayName + "! 👋");
+
+        // Set current date
+        LocalDate today = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE, MMMM d, yyyy");
+        dateLabel.setText("Spring 2024 - " + today.format(formatter));
+
+        updateDashboardStats();
     }
-    
-    private void updateDashboard() {
-        int totalCourses = DataManager.getInstance().getCurrentStudent().getRegisteredCourses().size();
-        totalCoursesLabel.setText("Total Registered Courses: " + totalCourses);
-        
-        // Update pie chart
-        courseChart.getData().clear();
-        courseChart.getData().add(new PieChart.Data("Registered", totalCourses));
-        courseChart.getData().add(new PieChart.Data("Available", 
-            DataManager.getInstance().getAvailableCourses().size() - totalCourses));
+
+    private String getDisplayName(String username) {
+        switch (username) {
+            case "john.doe": return "John Doe";
+            case "jane.smith": return "Jane Smith";
+            case "admin": return "Administrator";
+            default: return username;
+        }
     }
-    
+
+    private void updateDashboardStats() {
+        Student currentStudent = DataManager.getInstance().getCurrentStudent();
+        List<String> registeredCourseCodes = currentStudent.getRegisteredCourseCodes();
+        
+        int registeredCount = registeredCourseCodes.size();
+        int totalAvailable = DataManager.getInstance().getAllAvailableCourses().size();
+        int availableCount = totalAvailable - registeredCount;
+
+        totalCoursesLabel.setText(String.valueOf(registeredCount));
+        availableCoursesLabel.setText(String.valueOf(availableCount));
+
+        updateCourseChart(registeredCount, availableCount);
+    }
+
+    private void updateCourseChart(int registeredCount, int availableCount) {
+        ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList();
+        
+        if (registeredCount > 0) {
+            pieChartData.add(new PieChart.Data("Registered (" + registeredCount + ")", registeredCount));
+        }
+        if (availableCount > 0) {
+            pieChartData.add(new PieChart.Data("Available (" + availableCount + ")", availableCount));
+        }
+        if (registeredCount == 0 && availableCount == 0) {
+            pieChartData.add(new PieChart.Data("No Data", 1));
+        }
+
+        courseChart.setData(pieChartData);
+        courseChart.setTitle("Course Registration Overview");
+        courseChart.setLegendVisible(true);
+
+        // Apply custom colors
+        courseChart.getData().forEach(data -> {
+            if (data.getName().startsWith("Registered")) {
+                data.getNode().setStyle("-fx-pie-color: #3498db;");
+            } else if (data.getName().startsWith("Available")) {
+                data.getNode().setStyle("-fx-pie-color: #2ecc71;");
+            } else {
+                data.getNode().setStyle("-fx-pie-color: #95a5a6;");
+            }
+        });
+    }
+
+    @FXML
+    private void handleLogout() {
+        DataManager.getInstance().setCurrentStudent(null);
+        SceneManager.getInstance().switchScene("login.fxml");
+    }
+
     @FXML
     private void goToProfile() {
-        SceneManager.getInstance().switchScene("profile.fxml");
+        SceneManager.getInstance().switchScene("student-profile.fxml");
     }
-    
+
     @FXML
     private void goToRegisterCourse() {
         SceneManager.getInstance().switchScene("register-course.fxml");
     }
-    
+
     @FXML
     private void goToViewCourses() {
         SceneManager.getInstance().switchScene("view-courses.fxml");
-    }
-    
-    @FXML
-    private void handleLogout() {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Logout Confirmation");
-        alert.setHeaderText("Are you sure you want to logout?");
-        alert.setContentText("Any unsaved changes will be lost.");
-        
-        Optional<ButtonType> result = alert.showAndWait();
-        if (result.isPresent() && result.get() == ButtonType.OK) {
-            SceneManager.getInstance().switchScene("login.fxml");
-        }
-    }
-    
-    @FXML
-    private void handleExit() {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Exit Application");
-        alert.setHeaderText("Are you sure you want to exit?");
-        alert.setContentText("The application will be closed.");
-        
-        Optional<ButtonType> result = alert.showAndWait();
-        if (result.isPresent() && result.get() == ButtonType.OK) {
-            DataManager.getInstance().saveStudentData();
-            Platform.exit();
-        }
     }
 }
