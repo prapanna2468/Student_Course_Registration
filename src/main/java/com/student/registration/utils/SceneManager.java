@@ -9,28 +9,35 @@ import java.io.IOException;
 public class SceneManager {
     private static SceneManager instance;
     private Stage primaryStage;
-    
-    private SceneManager() {}
-    
-    public static SceneManager getInstance() {
+
+    private SceneManager() {
+        // Private constructor for singleton pattern
+    }
+
+    public static synchronized SceneManager getInstance() {
         if (instance == null) {
             instance = new SceneManager();
         }
         return instance;
     }
-    
+
     public void setPrimaryStage(Stage stage) {
         this.primaryStage = stage;
     }
-    
-    public void switchScene(String fxmlFile) {
+
+    public Stage getPrimaryStage() {
+        return primaryStage;
+    }
+
+    public void switchScene(String fxmlFileName) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/" + fxmlFile));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/" + fxmlFileName));
             Parent root = loader.load();
             Scene scene = new Scene(root);
-            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
             primaryStage.setScene(scene);
+            primaryStage.show();
         } catch (IOException e) {
+            System.err.println("Error loading FXML file: " + fxmlFileName);
             e.printStackTrace();
         }
     }
