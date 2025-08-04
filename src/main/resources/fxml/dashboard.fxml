@@ -1,73 +1,161 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
 <?import javafx.scene.chart.PieChart?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.layout.Priority?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.control.ScrollPane?>
 
-<BorderPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.student.registration.controllers.DashboardController">
-   <top>
-      <HBox alignment="CENTER_LEFT" spacing="20.0" styleClass="header">
-         <children>
-            <Text fx:id="welcomeLabel" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Welcome, Student!" styleClass="header-text">
-               <font>
-                  <Font name="System Bold" size="24.0" />
-               </font>
-            </Text>
-            <Region HBox.hgrow="ALWAYS" />
-            <Button mnemonicParsing="false" onAction="#handleLogout" text="Logout" styleClass="secondary-button" />
-            <Button mnemonicParsing="false" onAction="#handleExit" text="Exit" styleClass="danger-button" />
-         </children>
-         <padding>
-            <Insets bottom="20.0" left="30.0" right="30.0" top="20.0" />
-         </padding>
-      </HBox>
-   </top>
-   <center>
-      <HBox spacing="30.0">
-         <children>
-            <VBox spacing="20.0" HBox.hgrow="ALWAYS">
-               <children>
-                  <Text fill="#2c3e50" strokeType="OUTSIDE" strokeWidth="0.0" text="Navigation" styleClass="section-title">
-                     <font>
-                        <Font name="System Bold" size="20.0" />
-                     </font>
-                  </Text>
-                  <VBox spacing="15.0" styleClass="navigation-container">
-                     <children>
-                        <Button mnemonicParsing="false" onAction="#goToProfile" text="👤 Student Profile" styleClass="nav-button" />
-                        <Button mnemonicParsing="false" onAction="#goToRegisterCourse" text="📚 Register for Courses" styleClass="nav-button" />
-                        <Button mnemonicParsing="false" onAction="#goToViewCourses" text="📋 View Registered Courses" styleClass="nav-button" />
-                     </children>
-                     <padding>
-                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-                     </padding>
-                  </VBox>
-               </children>
+<VBox alignment="TOP_CENTER" spacing="0" styleClass="root" stylesheets="@../css/styles.css"
+      xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.student.registration.controllers.DashboardController"
+      prefWidth="1200" prefHeight="800">
+
+    <!-- Header Section -->
+    <VBox alignment="CENTER_LEFT" styleClass="dashboard-header" prefWidth="Infinity" VBox.vgrow="NEVER">
+        <HBox alignment="CENTER_LEFT" spacing="20.0" HBox.hgrow="ALWAYS">
+            <StackPane alignment="CENTER" prefHeight="60.0" prefWidth="60.0">
+                <Circle radius="30.0" style="-fx-fill: white;" />
+                <Text text="🎓" style="-fx-font-size: 35px;" />
+            </StackPane>
+            <VBox HBox.hgrow="ALWAYS">
+                <Text styleClass="dashboard-welcome-text" fx:id="welcomeLabel" text="Welcome, Student!" />
+                <Text styleClass="dashboard-date-text" fx:id="dateLabel" text="Spring 2024 - Today's Date" />
             </VBox>
-            <VBox spacing="20.0" HBox.hgrow="ALWAYS">
-               <children>
-                  <Text fill="#2c3e50" strokeType="OUTSIDE" strokeWidth="0.0" text="Dashboard Overview" styleClass="section-title">
-                     <font>
-                        <Font name="System Bold" size="20.0" />
-                     </font>
-                  </Text>
-                  <VBox spacing="15.0" styleClass="stats-container">
-                     <children>
-                        <Label fx:id="totalCoursesLabel" text="Total Registered Courses: 0" styleClass="stats-label" />
-                        <PieChart fx:id="courseChart" prefHeight="300.0" prefWidth="300.0" styleClass="course-chart" />
-                     </children>
-                     <padding>
-                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-                     </padding>
-                  </VBox>
-               </children>
+            <HBox alignment="CENTER_RIGHT" spacing="15.0">
+                <Button text="Logout" onAction="#handleLogout" styleClass="button-outline" />
+            </HBox>
+        </HBox>
+    </VBox>
+
+    <!-- Main Content Area -->
+    <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" styleClass="scroll-pane">
+        <content>
+            <VBox alignment="TOP_CENTER" spacing="30.0" maxWidth="1400">
+                <padding>
+                    <Insets left="30.0" right="30.0" top="30.0" bottom="30.0"/>
+                </padding>
+
+                <!-- Quick Stats Section -->
+                <GridPane hgap="25.0" vgap="25.0" alignment="CENTER">
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="ALWAYS" percentWidth="33.33" />
+                        <ColumnConstraints hgrow="ALWAYS" percentWidth="33.33" />
+                        <ColumnConstraints hgrow="ALWAYS" percentWidth="33.33" />
+                    </columnConstraints>
+                    
+                    <VBox styleClass="stat-card" GridPane.columnIndex="0" GridPane.rowIndex="0" spacing="15.0">
+                        <HBox alignment="CENTER_LEFT" spacing="20.0">
+                            <VBox HBox.hgrow="ALWAYS">
+                                <Label styleClass="stat-title" text="Registered Courses" />
+                                <Label styleClass="stat-value" fx:id="totalCoursesLabel" text="0" />
+                                <Label styleClass="stat-description" text="Active enrollments" />
+                            </VBox>
+                            <StackPane styleClass="stat-icon-container, stat-icon-blue">
+                                <Text text="📚" style="-fx-font-size: 24px;" />
+                            </StackPane>
+                        </HBox>
+                    </VBox>
+                    
+                    <VBox styleClass="stat-card" GridPane.columnIndex="1" GridPane.rowIndex="0" spacing="15.0">
+                        <HBox alignment="CENTER_LEFT" spacing="20.0">
+                            <VBox HBox.hgrow="ALWAYS">
+                                <Label styleClass="stat-title" text="Available Courses" />
+                                <Label styleClass="stat-value" fx:id="availableCoursesLabel" text="0" />
+                                <Label styleClass="stat-description" text="Ready to register" />
+                            </VBox>
+                            <StackPane styleClass="stat-icon-container, stat-icon-green">
+                                <Text text="✅" style="-fx-font-size: 24px;" />
+                            </StackPane>
+                        </HBox>
+                    </VBox>
+                    
+                    <VBox styleClass="stat-card" GridPane.columnIndex="2" GridPane.rowIndex="0" spacing="15.0">
+                        <HBox alignment="CENTER_LEFT" spacing="20.0">
+                            <VBox HBox.hgrow="ALWAYS">
+                                <Label styleClass="stat-title" text="Semester Progress" />
+                                <Label styleClass="stat-value" text="75%" />
+                                <Label styleClass="stat-description" text="Current semester" />
+                            </VBox>
+                            <StackPane styleClass="stat-icon-container, stat-icon-purple">
+                                <Text text="📈" style="-fx-font-size: 24px;" />
+                            </StackPane>
+                        </HBox>
+                    </VBox>
+                </GridPane>
+
+                <HBox spacing="30.0" alignment="TOP_CENTER" VBox.vgrow="ALWAYS">
+                    <!-- Navigation Cards -->
+                    <VBox spacing="20.0" HBox.hgrow="ALWAYS" maxWidth="500">
+                        <Label styleClass="card-header" text="Quick Actions" />
+                        
+                        <VBox styleClass="nav-card" onMouseClicked="#goToProfile" spacing="15.0">
+                            <HBox alignment="CENTER_LEFT" spacing="20.0">
+                                <StackPane styleClass="nav-icon-container, nav-icon-blue">
+                                    <Text text="👤" style="-fx-font-size: 20px;" />
+                                </StackPane>
+                                <VBox HBox.hgrow="ALWAYS">
+                                    <Label styleClass="card-header" text="Student Profile" />
+                                    <Label styleClass="card-description" text="View and edit your personal information" />
+                                </VBox>
+                            </HBox>
+                        </VBox>
+                        
+                        <VBox styleClass="nav-card" onMouseClicked="#goToRegisterCourse" spacing="15.0">
+                            <HBox alignment="CENTER_LEFT" spacing="20.0">
+                                <StackPane styleClass="nav-icon-container, nav-icon-green">
+                                    <Text text="➕" style="-fx-font-size: 20px;" />
+                                </StackPane>
+                                <VBox HBox.hgrow="ALWAYS">
+                                    <Label styleClass="card-header" text="Register for Courses" />
+                                    <Label styleClass="card-description" text="Browse and register for available courses" />
+                                </VBox>
+                            </HBox>
+                        </VBox>
+                        
+                        <VBox styleClass="nav-card" onMouseClicked="#goToViewCourses" spacing="15.0">
+                            <HBox alignment="CENTER_LEFT" spacing="20.0">
+                                <StackPane styleClass="nav-icon-container, nav-icon-purple">
+                                    <Text text="👁" style="-fx-font-size: 20px;" />
+                                </StackPane>
+                                <VBox HBox.hgrow="ALWAYS">
+                                    <Label styleClass="card-header" text="View Registered Courses" />
+                                    <Label styleClass="card-description" text="See all your registered courses and manage them" />
+                                </VBox>
+                            </HBox>
+                        </VBox>
+                    </VBox>
+
+                    <!-- Recent Activity & Course Chart -->
+                    <VBox spacing="25.0" HBox.hgrow="ALWAYS">
+                        <VBox styleClass="activity-card" spacing="15.0">
+                            <Label styleClass="card-header" text="Recent Activity" />
+                            <Label styleClass="card-description" text="Your recent activities and notifications" />
+                            <VBox spacing="12.0">
+                                <Label styleClass="activity-item" text="✅ Registered for Advanced Java Programming" />
+                                <Label styleClass="activity-item" text="📝 Updated profile information" />
+                                <Label styleClass="activity-item" text="📋 Completed Database Systems assignment" />
+                                <Label styleClass="activity-item" text="👀 Viewed course materials for Python" />
+                            </VBox>
+                        </VBox>
+
+                        <VBox styleClass="card" spacing="15.0">
+                            <Label styleClass="card-header" text="Course Registration Status" />
+                            <Label styleClass="card-description" text="Overview of your course registration" />
+                            <PieChart fx:id="courseChart" prefHeight="300" prefWidth="350" />
+                        </VBox>
+                    </VBox>
+                </HBox>
             </VBox>
-         </children>
-         <padding>
-            <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
-         </padding>
-      </HBox>
-   </center>
-</BorderPane>
+        </content>
+    </ScrollPane>
+</VBox>
