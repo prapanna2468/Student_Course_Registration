@@ -1,0 +1,60 @@
+package com.student.registration.controllers;
+
+import com.student.registration.models.Course;
+import com.student.registration.models.DataManager;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
+import javafx.scene.chart.PieChart;
+import javafx.scene.control.Label;
+import javafx.scene.paint.Color;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+public class CourseChartController {
+
+    @FXML
+    private PieChart courseChart;
+
+    @FXML
+    public void initialize() {
+        updateChart();
+    }
+
+    private void updateChart() {
+        List<String> registeredCourseCodes = DataManager.getInstance().getCurrentStudent().getRegisteredCourseCodes();
+        List<Course> allAvailableCourses = DataManager.getInstance().getAllAvailableCourses();
+
+        long registeredCount = registeredCourseCodes.size();
+        long availableCount = allAvailableCourses.stream()
+                .filter(course -> !registeredCourseCodes.contains(course.getCode()))
+                .count();
+
+        ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList(
+                new PieChart.Data("Registered (" + registeredCount + ")", registeredCount),
+                new PieChart.Data("Available (" + availableCount + ")", availableCount)
+        );
+
+        courseChart.setData(pieChartData);
+        courseChart.setTitle("Course Registration Overview");
+
+        // Apply custom colors using CSS classes if needed, or directly.
+        // This example applies directly for simplicity matching the previous React version colors.
+        // You can link these to styles.css by setting specific node IDs and using lookup() or similar.
+        courseChart.getData().forEach(data -> {
+            if (data.getName().startsWith("Registered")) {
+                data.getNode().setStyle("-fx-pie-color: #42a5f5;"); // Blue for registered
+            } else if (data.getName().startsWith("Available")) {
+                data.getNode().setStyle("-fx-pie-color: #66bb6a;"); // Green for available
+            }
+        });
+    }
+
+    // You can add a method to refresh the chart if data changes
+    public void refreshChart() {
+        updateChart();
+    }
+}
